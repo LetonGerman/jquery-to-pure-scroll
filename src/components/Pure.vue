@@ -4,7 +4,7 @@
 
         </header>
 
-        <div id="sidebar">
+        <div v-sidebar="'problems'" id="sidebar">
             <h1>Sidebar</h1>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. In eget tellus non tortor laoreet euismod. Nunc mattis fermentum aliquet. Donec elementum sagittis suscipit. Morbi vitae quam est. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae; Proin at tellus vitae nisl aliquet eleifend eget vehicula tortor. In tristique volutpat ante, at rhoncus felis scelerisque eu. Sed eros dolor, ultrices vitae tincidunt ac, dignissim in tellus. Nulla blandit cursus eros, non tincidunt velit sollicitudin mollis. Phasellus tellus velit, faucibus vel faucibus ut, luctus at mauris. Nunc in lacinia nibh.</p>
 
@@ -203,67 +203,7 @@
             msg: String
         },
         mounted() {
-                let supportPageOffset = window.pageXOffset !== undefined;
-                let isCSS1Compat = ((document.compatMode || "") === "CSS1Compat");
 
-                let lastScrollTop = supportPageOffset ? window.pageYOffset : isCSS1Compat ? document.documentElement.scrollTop : document.body.scrollTop;
-                let wasScrollingDown = true;
-
-                let sidebar = document.querySelector('#sidebar');
-                if (sidebar !== null) {
-                    console.log('keke');
-                    let initialSidebarTop = sidebar.offsetTop;
-                    window.addEventListener('scroll', () => {
-                        let windowHeight = window.innerHeight;
-                        let sidebarHeight = sidebar.offsetHeight;
-
-                        let scrollTop = supportPageOffset ? window.pageYOffset : isCSS1Compat ? document.documentElement.scrollTop : document.body.scrollTop;
-                        let scrollBottom = scrollTop + windowHeight;
-
-                        let sidebarTop = sidebar.offsetTop;
-                        let sidebarBottom = sidebarTop + sidebarHeight;
-
-                        let heightDelta = Math.abs(windowHeight - sidebarHeight);
-                        let scrollDelta = lastScrollTop - scrollTop;
-
-                        let isScrollingDown = (scrollTop > lastScrollTop);
-                        let isWindowLarger = (windowHeight > sidebarHeight);
-
-                        if ((isWindowLarger && scrollTop > initialSidebarTop) || (!isWindowLarger && scrollTop > initialSidebarTop + heightDelta)) {
-                            sidebar.classList.add('fixed');
-                        } else if (!isScrollingDown && scrollTop <= initialSidebarTop) {
-                            sidebar.classList.remove('fixed');
-                        }
-
-                        let dragBottomDown = (sidebarBottom <= scrollBottom && isScrollingDown);
-                        console.log('sidebar top (should be higher):' + sidebarTop);
-                        console.log(scrollTop);
-                        let dragTopUp = (sidebarTop >= scrollTop && !isScrollingDown);
-
-                        if (dragBottomDown) {
-                            if (isWindowLarger) {
-                                sidebar.style.top = '100px';
-                            } else {
-                                sidebar.style.top = -heightDelta + 'px';
-                            }
-                        } else if (dragTopUp) {
-                            sidebar.style.top = '0'
-                        } else if (sidebar.classList.contains('fixed')) {
-                            let currentTop = parseInt(sidebar.style.top, 10);
-
-                            let minTop = -heightDelta;
-                            let scrolledTop = currentTop + scrollDelta;
-
-                            let isPageAtBottom = (scrollTop + windowHeight >= document.innerHeight);
-                            let newTop = (isPageAtBottom) ? minTop : scrolledTop;
-
-                            sidebar.style.top = newTop + 'px';
-                        }
-
-                        lastScrollTop = scrollTop;
-                        wasScrollingDown = isScrollingDown;
-                    })
-                }
         }
     }
 </script>
